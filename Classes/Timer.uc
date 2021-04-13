@@ -3,16 +3,25 @@ Class Timer extends Interaction config(SplitTimer);
 var int currentWave;
 var float Yposition;
 
+var config bool bUpdateConfig;
 var config int Best[11];
+var int RealBest[11];
 
 var String Segments[11];
 var int Seconds[11];
  
 event Initialized()
 {
+	local int i;
+	
 		//Log("Interaction Started");
 		// Waves go from 0 to 4
 		currentWave = 0;
+		
+		for ( i = 0; i < 12; i++)
+		{
+			RealBest[i] = Best[i];
+		}
 }
  
 function PostRender( canvas Canvas )
@@ -51,15 +60,23 @@ function PostRender( canvas Canvas )
 		difference = SegmentTime(elapsed, currentWave);
 		Seconds[currentWave] = difference;
 
-		difference -= Best[currentWave];
+		difference -= RealBest[currentWave];
 		
 		Segments[currentWave] = Time @ FormatDifference(difference);
+		
+		// Save new best in the ini file
+		if (bUpdateConfig && difference < 0) 
+		{
+			Best[currentWave] = Seconds[currentWave];
+			SaveConfig();
+		}
+		
 		currentWave = wave;
 	}
 
 	for ( i = 0; i < wave; i++ )
 	{
-		if (Seconds[i] > Best[i])
+		if (Seconds[i] > RealBest[i])
 			Canvas.SetDrawColor(255,0,0);
 		else
 			Canvas.SetDrawColor(0,255,0);
@@ -74,7 +91,7 @@ function PostRender( canvas Canvas )
 	
 	difference = SegmentTime(elapsed, wave);
 	
-	if (difference > Best[wave])
+	if (difference > RealBest[wave])
 		Canvas.SetDrawColor(255,0,0);
 	else
 		Canvas.SetDrawColor(0,255,0);
