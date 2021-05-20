@@ -15,6 +15,8 @@ var int WRTOT;
 var int SoB;
 
 
+var GUI.GUITabItem newTab;
+
 event Initialized()
 {
 	local int i;
@@ -162,32 +164,54 @@ event NotifyLevelChange() {
 }
 
 
+function bool KeyEvent(EInputKey Key, EInputAction Action, float Delta)
+{
+	local string alias;
+	local MidGamePanel panel;
+
+	alias= ViewportOwner.Actor.ConsoleCommand("KEYBINDING"@ViewportOwner.Actor.ConsoleCommand("KEYNAME"@Key));
+	if (Action == IST_Press && alias ~= "showmenu") {
+		if (KFGUIController(ViewportOwner.GUIController).ActivePage == None) {
+			ViewportOwner.Actor.ShowMenu();
+		}
+		if (KFInvasionLoginMenu(KFGUIController(ViewportOwner.GUIController).ActivePage) != none &&
+				KFInvasionLoginMenu(KFGUIController(ViewportOwner.GUIController).ActivePage).c_Main.TabIndex(newTab.caption) == -1) {
+			panel= MidGamePanel(KFInvasionLoginMenu(KFGUIController(ViewportOwner.GUIController).ActivePage).c_Main.AddTabItem(newTab));
+			if (panel != none) {
+				panel.ModifiedChatRestriction= KFInvasionLoginMenu(KFGUIController(ViewportOwner.GUIController).ActivePage).UpdateChatRestriction;
+			}
+		}
+	}
+	return false;
+}
+
+
 function String FormatTime( int Seconds )
 {
-    local int Minutes, Hours;
-    local String Time;
+	local int Minutes, Hours;
+	local String Time;
 
-    if( Seconds > 3600 )
-    {
-        Hours = Seconds / 3600;
-        Seconds -= Hours * 3600;
+	if( Seconds > 3600 )
+	{
+		Hours = Seconds / 3600;
+		Seconds -= Hours * 3600;
 
-        Time = Hours$":";
+		Time = Hours$":";
 	}
 	Minutes = Seconds / 60;
-    Seconds -= Minutes * 60;
+	Seconds -= Minutes * 60;
 
-    if( Minutes >= 10 )
-        Time = Time $ Minutes $ ":";
-    else
-        Time = Time $ "0" $ Minutes $ ":";
+	if( Minutes >= 10 )
+		Time = Time $ Minutes $ ":";
+	else
+		Time = Time $ "0" $ Minutes $ ":";
 
-    if( Seconds >= 10 )
-        Time = Time $ Seconds;
-    else
-        Time = Time $ "0" $ Seconds;
+	if( Seconds >= 10 )
+		Time = Time $ Seconds;
+	else
+		Time = Time $ "0" $ Seconds;
 
-    return Time;
+	return Time;
 }
 
 
@@ -223,6 +247,7 @@ function int SegmentTime ( int Elapsed, int Wave)
 
 defaultproperties
 {
-    bVisible=true
-    bActive=true
+	bVisible=true
+	bActive=true
+	newTab=(ClassName="SplitTimer.TimerPanel")
 }
