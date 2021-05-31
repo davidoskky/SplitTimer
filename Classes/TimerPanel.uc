@@ -9,11 +9,12 @@ struct SliderStrPair {
     var String str;
 };
 
+var Timer TimerInteraction;
 var automated moComboBox categories, players;
 var automated GUIListBox statBox;
 //var array<SortedMap> statsInfo;
 var automated moSlider sl_bgR, sl_bgG, sl_bgB, sl_txtR, sl_txtG, sl_txtB, sl_alpha, sl_txtScale;
-var automated moNumericEdit PB, WR0, WR1;
+var automated moNumericEdit PB, WR0, WR1, WR2, WR3, WR4, WR5, WR6, WR7, WR8, WR9, WR10, WR11;
 var array<SliderStrPair> sliders;
 var String statListClass;
 var PlayerReplicationInfo lastSelected;
@@ -40,7 +41,12 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner) {
     local int i;
 
     super.InitComponent(MyController, MyOwner);
-
+	
+	foreach AllObjects(class'Timer', TimerInteraction)
+	{
+		break;
+	}
+	
     // sliders.Length= 8;
     // sliders[0].slider= sl_bgR;
     // sliders[0].str= "bgR";
@@ -60,11 +66,12 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner) {
     // sliders[7].str= "txtScale";
 
     sb_Players.Caption= "World Record";
+	sb_Players.UnManageComponent(lb_Players);
     sb_Players.ManageComponent(PB);
 	sb_Players.ManageComponent(WR0);
 	sb_Players.ManageComponent(WR1);
-    sb_Players.UnManageComponent(lb_Players);
-
+	sb_Players.ManageComponent(WR2);
+	
     /** 
      * This is purely for combo box placement.  The 
      * lb_Specs variable will not be visible in the window
@@ -84,7 +91,16 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner) {
 function InternalOnLoadINI(GUIComponent sender, string s) {
     local int i;
     local String command;
+	local int WRArray[11];
 
+	for (i = 0; i < 12; i++)
+	{
+		WRArray[i] = TimerInteraction.Best[i];
+	}
+	WR0.SetValue(WRArray[0]);
+	WR1.SetValue(WRArray[1]);
+	WR2.SetValue(WRArray[2]);
+	
     if (sender == players) {
         if (lastSelected == None) {
             //lastSelected= PlayerOwner().PlayerReplicationInfo;
@@ -105,6 +121,7 @@ function InternalOnLoadINI(GUIComponent sender, string s) {
             command= "get" @ statListClass @ sliders[i].str;
             sliders[i].slider.SetComponentValue(float(PlayerOwner().ConsoleCommand(command)), true);
         }
+		
     }
 }
 
@@ -112,6 +129,9 @@ function InternalOnChange(GUIComponent sender) {
     local int i;
     local String command;
 
+	TimerInteraction.Best[0] = Int(WR0.GetComponentValue());
+	TimerInteraction.SaveConfig();
+	
     if (sender == categories) {
         //fillList(statsInfo[categories.GetIndex()]);
     } else if (sender == players) {
@@ -132,7 +152,6 @@ function FillPlayerLists() {
 }
 
 defaultproperties {
-    statListClass= "KFStatsX.StatList"
 
     ch_NoVoiceChat= None
     ch_NoSpeech= None
@@ -150,6 +169,8 @@ defaultproperties {
 		MinValue=0
 		Caption="Wave 1"
 		IniOption="@Internal"
+		OnChange=TimerPanel.InternalOnChange
+        OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
 	WR0 = moNumericEdit'TimerPanel.WRBox_0'
 	
@@ -159,4 +180,12 @@ defaultproperties {
 		IniOption="@Internal"
 	End Object
 	WR1 = moNumericEdit'TimerPanel.WRBox_1'
+	
+	Begin Object Class=moNumericEdit Name=WRBox_2
+		MinValue=0
+		Caption="Wave 3"
+		IniOption="@Internal"
+		OnLoadINI=TimerPanel.InternalOnLoadINI
+	End Object
+	WR2 = moNumericEdit'TimerPanel.WRBox_2'
 }

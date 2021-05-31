@@ -14,7 +14,6 @@ var int Seconds[11];
 var int WRTOT;
 var int SoB;
 
-
 var GUI.GUITabItem newTab;
 
 event Initialized()
@@ -179,6 +178,7 @@ function bool KeyEvent(EInputKey Key, EInputAction Action, float Delta)
 			panel= MidGamePanel(KFInvasionLoginMenu(KFGUIController(ViewportOwner.GUIController).ActivePage).c_Main.AddTabItem(newTab));
 			if (panel != none) {
 				panel.ModifiedChatRestriction= KFInvasionLoginMenu(KFGUIController(ViewportOwner.GUIController).ActivePage).UpdateChatRestriction;
+				//newTab.TimerInteraction = this;
 			}
 		}
 	}
