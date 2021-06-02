@@ -2,13 +2,14 @@
  * Panel class for the SplitTimer tab.  This class borrows its look and feel from the communications tab
  * Thanks to etsai (Scary Ghost) for the original code.
  */
-class TimerPanel extends KFGui.KFTab_MidGameVoiceChat;
+class TimerPanel extends GUI2K4.MidGamePanel;
 
 struct NumericStrPair {
     var moNumericEdit NumericBox;
     var String str;
 };
 
+var automated GUISectionBackground sb_WR, sb_PB;
 var Timer TimerInteraction;
 var automated moNumericEdit PB, WR0, WR1, WR2, WR3, WR4, WR5, WR6, WR7, WR8, WR9, WR10;
 var automated moNumericEdit Best0, Best1, Best2, Best3, Best4, Best5, Best6, Best7, Best8, Best9, Best10;
@@ -48,17 +49,14 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner) {
 		break;
 	}
 	
-    sb_Players.Caption= "World Record";
-    sb_Players.ManageComponent(PB);
-	//sb_Specs.UnManageComponent(lb_Specs);
-	sb_Specs.Caption = "Personal Best";
+    sb_PB.ManageComponent(PB);
 
 	for (i = 0; i < 12; i++)
 	{
 		WRBoxes[i].str = 'Wave' @ i;
 		BestBoxes[i].str = 'Wave' @ i;
-		sb_Players.ManageComponent(WRBoxes[i].NumericBox);
-		sb_Specs.ManageComponent(BestBoxes[i].NumericBox);
+		sb_WR.ManageComponent(WRBoxes[i].NumericBox);
+		sb_PB.ManageComponent(BestBoxes[i].NumericBox);
 	}
 }
 
@@ -86,12 +84,36 @@ function InternalOnChange(GUIComponent sender) {
 }
 
 defaultproperties {
-
-    ch_NoVoiceChat= None
-    ch_NoSpeech= None
-    ch_NoText= None
-    ch_Ban= None
 	
+	Begin Object Class=AltSectionBackground Name=WRBackground
+        Caption="World Record"
+        LeftPadding=0.00000
+        RightPadding=0.00000
+        TopPadding=0.00000
+        BottomPadding=0.00000
+		WinWidth=0.462019
+		WinHeight=0.899506
+		WinLeft=0.019250
+		WinTop=0.030325
+        bBoundToParent=True
+        bScaleToParent=True
+	End Object
+	sb_WR=WRBackground
+	
+	Begin Object Class=AltSectionBackground Name=PBBackground
+        Caption="Personal Best"
+        LeftPadding=0.00000
+        RightPadding=0.00000
+        TopPadding=0.00000
+        BottomPadding=0.00000
+		WinWidth=0.462019
+		WinHeight=0.899506
+		WinLeft=0.512544
+		WinTop=0.030325
+        bBoundToParent=True
+        bScaleToParent=True
+	End Object
+	sb_PB=PBBackground
 	
 	Begin Object Class=moNumericEdit Name=PBBox
 		MinValue=0
