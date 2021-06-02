@@ -4,39 +4,16 @@
  */
 class TimerPanel extends KFGui.KFTab_MidGameVoiceChat;
 
-struct SliderStrPair {
-    var moSlider slider;
+struct NumericStrPair {
+    var moNumericEdit NumericBox;
     var String str;
 };
 
 var Timer TimerInteraction;
-var automated moComboBox categories, players;
-var automated GUIListBox statBox;
-//var array<SortedMap> statsInfo;
-var automated moSlider sl_bgR, sl_bgG, sl_bgB, sl_txtR, sl_txtG, sl_txtB, sl_alpha, sl_txtScale;
-var automated moNumericEdit PB, WR0, WR1, WR2, WR3, WR4, WR5, WR6, WR7, WR8, WR9, WR10, WR11;
-var array<SliderStrPair> sliders;
-var String statListClass;
-var PlayerReplicationInfo lastSelected;
-/* 
-function fillList(SortedMap stats) {
-    local int i;
-    local GUIListElem elem;
+var automated moNumericEdit PB, WR0, WR1, WR2, WR3, WR4, WR5, WR6, WR7, WR8, WR9, WR10;
+var array<NumericBox> WRBoxes[11];
+var NumericStrPair WR0
 
-    statBox.List.bInitializeList= true;
-    statBox.List.Clear();
-    for(i= 0; i < stats.maxStatIndex; i++) {
-        if (stats.keys[i] != class'KFSXGameRules'.default.damageKey || 
-                stats.keys[i] == class'KFSXGameRules'.default.damageKey && 
-                (!KFGameReplicationInfo(PlayerOwner().GameReplicationInfo).bWaveInProgress || 
-                KFGameReplicationInfo(PlayerOwner().GameReplicationInfo).EndGameType != 0)) {
-            elem.Item= stats.keys[i];
-            elem.ExtraStrData= string(int(stats.values[i]));
-            statBox.List.AddElement(elem);
-        }
-    }
-}
- */
 function InitComponent(GUIController MyController, GUIComponent MyOwner) {
     local int i;
 
@@ -46,109 +23,47 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner) {
 	{
 		break;
 	}
-	
-    // sliders.Length= 8;
-    // sliders[0].slider= sl_bgR;
-    // sliders[0].str= "bgR";
-    // sliders[1].slider= sl_bgG;
-    // sliders[1].str= "bgG";
-    // sliders[2].slider= sl_bgB;
-    // sliders[2].str= "bgB";
-    // sliders[3].slider= sl_alpha;
-    // sliders[3].str= "alpha";
-    // sliders[4].slider= sl_txtR;
-    // sliders[4].str= "txtR";
-    // sliders[5].slider= sl_txtG;
-    // sliders[5].str= "txtG";
-    // sliders[6].slider= sl_txtB;
-    // sliders[6].str= "txtB";
-    // sliders[7].slider= sl_txtScale;
-    // sliders[7].str= "txtScale";
 
+	for (i = 0; i < 12; i++)
+	{
+		WRBoxes[i].str = 'Wave' @ i;
+		sb_Players.ManageComponent(WRBoxes[i].NumericBox);
+	}
     sb_Players.Caption= "World Record";
 	sb_Players.UnManageComponent(lb_Players);
     sb_Players.ManageComponent(PB);
-	sb_Players.ManageComponent(WR0);
-	sb_Players.ManageComponent(WR1);
-	sb_Players.ManageComponent(WR2);
-	
-    /** 
-     * This is purely for combo box placement.  The 
-     * lb_Specs variable will not be visible in the window
-     */
-/*     sb_Specs.Caption= "Filters";
-    sb_Specs.UnManageComponent(lb_Specs);
-    sb_Specs.ManageComponent(categories);
-    sb_Specs.ManageComponent(players);
-    sb_Specs.ManageComponent(lb_Specs); */
-
-    //sb_Options.Caption= "Settings";
-/*     for(i= 0; i < sliders.Length; i++) {
-        sb_Options.ManageComponent(sliders[i].slider);
-    } */
 }
 
 function InternalOnLoadINI(GUIComponent sender, string s) {
     local int i;
-    local String command;
-	local int WRArray[11];
+
+	WRBoxes[0].NumericBox = WR0;
+	WRBoxes[1].NumericBox = WR1;
+	WRBoxes[2].NumericBox = WR2;
+	WRBoxes[3].NumericBox = WR3;
+	WRBoxes[4].NumericBox = WR4;
+	WRBoxes[5].NumericBox = WR5;
+	WRBoxes[6].NumericBox = WR6;
+	WRBoxes[7].NumericBox = WR7;
+	WRBoxes[8].NumericBox = WR8;
+	WRBoxes[9].NumericBox = WR9;
+	WRBoxes[10].NumericBox = WR10;
+
 
 	for (i = 0; i < 12; i++)
 	{
-		WRArray[i] = TimerInteraction.Best[i];
+		WRBoxes[i].NumericBox.SetValue(TimerInteraction.Best[i]);
 	}
-	WR0.SetValue(WRArray[0]);
-	WR1.SetValue(WRArray[1]);
-	WR2.SetValue(WRArray[2]);
-	
-    if (sender == players) {
-        if (lastSelected == None) {
-            //lastSelected= PlayerOwner().PlayerReplicationInfo;
-        }
-        players.ResetComponent();
-        for(i= 0; i < PlayerOwner().GameReplicationInfo.PRIArray.Length; i++) {
-            players.AddItem(PlayerOwner().GameReplicationInfo.PRIArray[i].PlayerName);
-            if (PlayerOwner().GameReplicationInfo.PRIArray[i] == lastSelected) {
-                players.SilentSetIndex(i);
-            }
-        }
-        //fillStatsInfo(class'KFSXReplicationInfo'.static.findKFSXri(lastSelected));
-    } else {
-        while(i < sliders.Length && sender != sliders[i].slider) {
-            i++;
-        }
-        if (i < sliders.Length) {
-            command= "get" @ statListClass @ sliders[i].str;
-            sliders[i].slider.SetComponentValue(float(PlayerOwner().ConsoleCommand(command)), true);
-        }
-		
-    }
 }
 
 function InternalOnChange(GUIComponent sender) {
     local int i;
-    local String command;
 
-	TimerInteraction.Best[0] = Int(WR0.GetComponentValue());
+	for (i = 0; i < 12; i++)
+	{
+		TimerInteraction.Best[i] = Int(WRBoxes.NumericBox.GetComponentValue());
+	}
 	TimerInteraction.SaveConfig();
-	
-    if (sender == categories) {
-        //fillList(statsInfo[categories.GetIndex()]);
-    } else if (sender == players) {
-        lastSelected= PlayerOwner().GameReplicationInfo.PRIArray[players.GetIndex()];
-        //fillStatsInfo(class'KFSXReplicationInfo'.static.findKFSXri(lastSelected));
-    } else {
-        while(i < sliders.Length && sender != sliders[i].slider) {
-            i++;
-        }
-        if (i < sliders.Length) {
-            command= "set"@ statListClass @ sliders[i].str @ sliders[i].slider.GetValue();
-            PlayerOwner().ConsoleCommand(command);
-        }
-    }
-}
-
-function FillPlayerLists() {
 }
 
 defaultproperties {
@@ -172,14 +87,14 @@ defaultproperties {
 		OnChange=TimerPanel.InternalOnChange
         OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	WR0 = moNumericEdit'TimerPanel.WRBox_0'
+	WRBoxes[0].NumericBox = moNumericEdit'TimerPanel.WRBox_0'
 	
 	Begin Object Class=moNumericEdit Name=WRBox_1
 		MinValue=0
 		Caption="Wave 2"
 		IniOption="@Internal"
 	End Object
-	WR1 = moNumericEdit'TimerPanel.WRBox_1'
+	WRBoxes[1].NumericBox = moNumericEdit'TimerPanel.WRBox_1'
 	
 	Begin Object Class=moNumericEdit Name=WRBox_2
 		MinValue=0
@@ -187,5 +102,69 @@ defaultproperties {
 		IniOption="@Internal"
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	WR2 = moNumericEdit'TimerPanel.WRBox_2'
+	WRBoxes[2].NumericBox = moNumericEdit'TimerPanel.WRBox_2'
+	
+	Begin Object Class=moNumericEdit Name=WRBox_3
+		MinValue=0
+		Caption="Wave 4"
+		IniOption="@Internal"
+		OnLoadINI=TimerPanel.InternalOnLoadINI
+	End Object
+	WRBoxes[3].NumericBox = moNumericEdit'TimerPanel.WRBox_3'
+	
+		Begin Object Class=moNumericEdit Name=WRBox_4
+		MinValue=0
+		Caption="Wave 5"
+		IniOption="@Internal"
+		OnLoadINI=TimerPanel.InternalOnLoadINI
+	End Object
+	WRBoxes[4].NumericBox = moNumericEdit'TimerPanel.WRBox_4'
+	
+	Begin Object Class=moNumericEdit Name=WRBox_5
+		MinValue=0
+		Caption="Wave 6"
+		IniOption="@Internal"
+		OnLoadINI=TimerPanel.InternalOnLoadINI
+	End Object
+	WRBoxes[5].NumericBox = moNumericEdit'TimerPanel.WRBox_5'
+	
+	Begin Object Class=moNumericEdit Name=WRBox_6
+		MinValue=0
+		Caption="Wave 7"
+		IniOption="@Internal"
+		OnLoadINI=TimerPanel.InternalOnLoadINI
+	End Object
+	WRBoxes[6].NumericBox = moNumericEdit'TimerPanel.WRBox_6'
+	
+	Begin Object Class=moNumericEdit Name=WRBox_7
+		MinValue=0
+		Caption="Wave 8"
+		IniOption="@Internal"
+		OnLoadINI=TimerPanel.InternalOnLoadINI
+	End Object
+	WRBoxes[7].NumericBox = moNumericEdit'TimerPanel.WRBox_7'
+	
+	Begin Object Class=moNumericEdit Name=WRBox_8
+		MinValue=0
+		Caption="Wave 9"
+		IniOption="@Internal"
+		OnLoadINI=TimerPanel.InternalOnLoadINI
+	End Object
+	WRBoxes[8].NumericBox = moNumericEdit'TimerPanel.WRBox_8'
+	
+	Begin Object Class=moNumericEdit Name=WRBox_9
+		MinValue=0
+		Caption="Wave 10"
+		IniOption="@Internal"
+		OnLoadINI=TimerPanel.InternalOnLoadINI
+	End Object
+	WRBoxes[9].NumericBox = moNumericEdit'TimerPanel.WRBox_9'
+	
+	Begin Object Class=moNumericEdit Name=WRBox_10
+		MinValue=0
+		Caption="Wave 11"
+		IniOption="@Internal"
+		OnLoadINI=TimerPanel.InternalOnLoadINI
+	End Object
+	WRBoxes[10].NumericBox = moNumericEdit'TimerPanel.WRBox_10'
 }
