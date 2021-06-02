@@ -11,32 +11,13 @@ struct NumericStrPair {
 
 var Timer TimerInteraction;
 var automated moNumericEdit PB, WR0, WR1, WR2, WR3, WR4, WR5, WR6, WR7, WR8, WR9, WR10;
-var array<NumericBox> WRBoxes[11];
-var NumericStrPair WR0
+var array<NumericStrPair> WRBoxes[11];
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner) {
     local int i;
 
     super.InitComponent(MyController, MyOwner);
 	
-	foreach AllObjects(class'Timer', TimerInteraction)
-	{
-		break;
-	}
-
-	for (i = 0; i < 12; i++)
-	{
-		WRBoxes[i].str = 'Wave' @ i;
-		sb_Players.ManageComponent(WRBoxes[i].NumericBox);
-	}
-    sb_Players.Caption= "World Record";
-	sb_Players.UnManageComponent(lb_Players);
-    sb_Players.ManageComponent(PB);
-}
-
-function InternalOnLoadINI(GUIComponent sender, string s) {
-    local int i;
-
 	WRBoxes[0].NumericBox = WR0;
 	WRBoxes[1].NumericBox = WR1;
 	WRBoxes[2].NumericBox = WR2;
@@ -48,7 +29,24 @@ function InternalOnLoadINI(GUIComponent sender, string s) {
 	WRBoxes[8].NumericBox = WR8;
 	WRBoxes[9].NumericBox = WR9;
 	WRBoxes[10].NumericBox = WR10;
+	
+	foreach AllObjects(class'Timer', TimerInteraction)
+	{
+		break;
+	}
+	
+    sb_Players.Caption= "World Record";
+	sb_Players.UnManageComponent(lb_Players);
+    sb_Players.ManageComponent(PB);
+	for (i = 0; i < 12; i++)
+	{
+		WRBoxes[i].str = 'Wave' @ i;
+		sb_Players.ManageComponent(WRBoxes[i].NumericBox);
+	}
+}
 
+function InternalOnLoadINI(GUIComponent sender, string s) {
+    local int i;
 
 	for (i = 0; i < 12; i++)
 	{
@@ -61,7 +59,7 @@ function InternalOnChange(GUIComponent sender) {
 
 	for (i = 0; i < 12; i++)
 	{
-		TimerInteraction.Best[i] = Int(WRBoxes.NumericBox.GetComponentValue());
+		TimerInteraction.Best[i] = Int(WRBoxes[i].NumericBox.GetComponentValue());
 	}
 	TimerInteraction.SaveConfig();
 }
@@ -72,6 +70,7 @@ defaultproperties {
     ch_NoSpeech= None
     ch_NoText= None
     ch_Ban= None
+	
 	
 	Begin Object Class=moNumericEdit Name=PBBox
 		MinValue=0
@@ -87,14 +86,14 @@ defaultproperties {
 		OnChange=TimerPanel.InternalOnChange
         OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	WRBoxes[0].NumericBox = moNumericEdit'TimerPanel.WRBox_0'
+	WR0=moNumericEdit'TimerPanel.WRBox_0'
 	
 	Begin Object Class=moNumericEdit Name=WRBox_1
 		MinValue=0
 		Caption="Wave 2"
 		IniOption="@Internal"
 	End Object
-	WRBoxes[1].NumericBox = moNumericEdit'TimerPanel.WRBox_1'
+	WR1=moNumericEdit'TimerPanel.WRBox_1'
 	
 	Begin Object Class=moNumericEdit Name=WRBox_2
 		MinValue=0
@@ -102,7 +101,7 @@ defaultproperties {
 		IniOption="@Internal"
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	WRBoxes[2].NumericBox = moNumericEdit'TimerPanel.WRBox_2'
+	WR2=moNumericEdit'TimerPanel.WRBox_2'
 	
 	Begin Object Class=moNumericEdit Name=WRBox_3
 		MinValue=0
@@ -110,7 +109,7 @@ defaultproperties {
 		IniOption="@Internal"
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	WRBoxes[3].NumericBox = moNumericEdit'TimerPanel.WRBox_3'
+	WR3=moNumericEdit'TimerPanel.WRBox_3'
 	
 		Begin Object Class=moNumericEdit Name=WRBox_4
 		MinValue=0
@@ -118,7 +117,7 @@ defaultproperties {
 		IniOption="@Internal"
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	WRBoxes[4].NumericBox = moNumericEdit'TimerPanel.WRBox_4'
+	WR4=moNumericEdit'TimerPanel.WRBox_4'
 	
 	Begin Object Class=moNumericEdit Name=WRBox_5
 		MinValue=0
@@ -126,7 +125,7 @@ defaultproperties {
 		IniOption="@Internal"
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	WRBoxes[5].NumericBox = moNumericEdit'TimerPanel.WRBox_5'
+	WR5=moNumericEdit'TimerPanel.WRBox_5'
 	
 	Begin Object Class=moNumericEdit Name=WRBox_6
 		MinValue=0
@@ -134,7 +133,7 @@ defaultproperties {
 		IniOption="@Internal"
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	WRBoxes[6].NumericBox = moNumericEdit'TimerPanel.WRBox_6'
+	WR6=moNumericEdit'TimerPanel.WRBox_6'
 	
 	Begin Object Class=moNumericEdit Name=WRBox_7
 		MinValue=0
@@ -142,7 +141,7 @@ defaultproperties {
 		IniOption="@Internal"
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	WRBoxes[7].NumericBox = moNumericEdit'TimerPanel.WRBox_7'
+	WR7=moNumericEdit'TimerPanel.WRBox_7'
 	
 	Begin Object Class=moNumericEdit Name=WRBox_8
 		MinValue=0
@@ -150,7 +149,7 @@ defaultproperties {
 		IniOption="@Internal"
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	WRBoxes[8].NumericBox = moNumericEdit'TimerPanel.WRBox_8'
+	WR8=moNumericEdit'TimerPanel.WRBox_8'
 	
 	Begin Object Class=moNumericEdit Name=WRBox_9
 		MinValue=0
@@ -158,7 +157,7 @@ defaultproperties {
 		IniOption="@Internal"
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	WRBoxes[9].NumericBox = moNumericEdit'TimerPanel.WRBox_9'
+	WR9 = moNumericEdit'TimerPanel.WRBox_9'
 	
 	Begin Object Class=moNumericEdit Name=WRBox_10
 		MinValue=0
@@ -166,5 +165,5 @@ defaultproperties {
 		IniOption="@Internal"
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	WRBoxes[10].NumericBox = moNumericEdit'TimerPanel.WRBox_10'
+	WR10 = moNumericEdit'TimerPanel.WRBox_10'
 }
