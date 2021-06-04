@@ -5,104 +5,174 @@ var float Yposition;
 
 var config bool bUpdateConfig;
 var config int Best[11];
-var int RealBest[11];
+var config int WR[11];
+var config int PB;
 
+var int RealBest[11];
 var String Segments[11];
 var int Seconds[11];
- 
+var int WRTOT;
+var int SoB;
+
+
 event Initialized()
 {
 	local int i;
-	
+
 		//Log("Interaction Started");
 		// Waves go from 0 to 4
 		currentWave = 0;
-		
+
 		for ( i = 0; i < 12; i++)
 		{
 			RealBest[i] = Best[i];
 		}
+
+	//Sums the wr splits to show the current WR (MASTRO)
+	for (i=0 ; i<12; i++)
+	{
+		WRTOT += WR[i];
+	}
+	//Sums the best splits to show your best possible time (Sum of Best) (MASTRO)
+	for (i=0; i<12; i++)
+	{
+		SoB += Best[i];
+	}
+	
+	for (i=0; i<12; i++)
+	{
+		Segments[i] = "Wave" @ i + 1 @ FormatTime(WR[i]);
+	}
+
 }
- 
+
 function PostRender( canvas Canvas )
 {
 
 	local GameReplicationInfo GRI;
 	local String Time;
-	local float canvasDim;
 	local int wave;
 	local int elapsed;
 	local int difference;
 	local int FinalWave;
+	local int TotalTime;
 	local int i;
-	
+	//(MASTRO)
+	local int Xbox;
+	local int Ybox;
+	local int BoxEnd;
+
 	GRI = ViewportOwner.Actor.GameReplicationInfo;
-	
+
 	if ( FinalWave == 0 )
 		FinalWave = KFGameReplicationInfo(GRI).FinalWave;
-	
-	canvasDim = Canvas.SizeX * 0.9;
-	Yposition = Canvas.SizeY / 2;
-	Yposition = Yposition - 100;
-	
+
 	wave = KFGameReplicationInfo(GRI).WaveNumber;
-	
+
 	elapsed = GRI.ElapsedTime;
 	Time = FormatTime(elapsed);
-	
-	// If we beat the Patriarch add an imaginary wave to block printing time
-	if (wave == FinalWave && !KFGameReplicationInfo(GRI).bWaveInProgress && FinalWave > 0)
-		wave += 1;
-		
-	// At wave change, check difference with best
-	if ( wave != currentWave ) 
-	{
-		difference = SegmentTime(elapsed, currentWave);
-		Seconds[currentWave] = difference;
 
-		difference -= RealBest[currentWave];
-		
-		Segments[currentWave] = Time @ FormatDifference(difference);
-		
-		// Save new best in the ini file
-		if (bUpdateConfig && difference < 0) 
+	// Check if we beat the Patriarch
+	if (KFGameReplicationInfo(GRI).EndGameType  == 2)
+	{
+		//If we beat the WR, update the ini file
+		if (bUpdateConfig)
+		{
+			for ( i = 0; i < wave; i++ )
+			{
+				TotalTime += Seconds[i];
+			}
+			if (TotalTime < WRTOT)
+			{
+				for ( i = 0; i < wave-1; i++)
+				{
+					WR[i] = Seconds[i];
+				}
+				WR[wave] = elapsed;
+				SaveConfig();
+			}
+			if (TotalTime < PB)
+			{
+				PB = TotalTime;
+				SaveConfig();
+			}
+		}
+	}
+	
+	Seconds[wave] = SegmentTime(elapsed, wave);
+
+	// At wave change, check difference with WR
+	if ( wave != currentWave )
+	{
+		difference = Seconds [currentWave] - WR[currentWave];
+
+		Segments[currentWave] = Segments[currentWave] @ FormatDifference(difference);
+
+		// Save new BEST in the ini file //The thing between parenthesis is complicated cause the variable it used has been modified above (MASTRO)
+		if (bUpdateConfig && ((SegmentTime(elapsed, currentWave) - RealBest[currentWave])  < 0))
 		{
 			Best[currentWave] = Seconds[currentWave];
 			SaveConfig();
 		}
-		
 		currentWave = wave;
 	}
 
-	for ( i = 0; i < wave; i++ )
+	// Use a better font
+	Canvas.Font = class'ROHUD'.Static.GetSmallMenuFont(Canvas);
+
+	Yposition = Canvas.SizeY / 2 - 200;
+
+	//(MASTRO) Ugly box for ugly aesthetics
+	Ybox = Yposition - Canvas.SizeY * 0.05;
+	Xbox = Canvas.SizeX * 0.75;
+	BoxEnd = Xbox + Canvas.SizeX * 0.24;
+ 	Canvas.SetDrawColor(0,0,255);
+	Canvas.DrawTextJustified("SPLIT TIMER", 1, Xbox, Ybox, BoxEnd, Ybox + 25);
+	Canvas.SetPos(Xbox , Ybox);
+	Canvas.DrawBox(Canvas, Canvas.SizeX * 0.24, 450);
+	
+	// Changes the 3 colors of the splits by comparing them to WR and to Best splits(MASTRO)
+	for ( i = 0; i < FinalWave + 1; i++ )
 	{
-		if (Seconds[i] > RealBest[i])
-			Canvas.SetDrawColor(255,0,0);
-		else
-			Canvas.SetDrawColor(0,255,0);
+		if (Seconds[i] <= RealBest[i])
+			Canvas.SetDrawColor(255,0,255);
+		else if (Seconds[i] <= WR[i])
+				Canvas.SetDrawColor(0,255,0);
+			 else
+				Canvas.SetDrawColor(255,0,0);
 
-		Canvas.SetPos(canvasDim, Yposition);
-		Canvas.DrawText(Segments[i]);
-		
+		//Set the color of the next waves to white
+		if (wave < i)
+			Canvas.SetDrawColor(255, 255, 255);
+
+		Canvas.DrawTextJustified(Segments[i], 0, Xbox + 10, Yposition, BoxEnd, Yposition + 25);
+
 		Yposition += 50;
-
 	}
 
-	
-	difference = SegmentTime(elapsed, wave);
-	
-	if (difference > RealBest[wave])
-		Canvas.SetDrawColor(255,0,0);
-	else
-		Canvas.SetDrawColor(0,255,0);
+	//Shows Run time, WR, PB and SoB below the current splits (MASTRO)
+	Canvas.SetDrawColor(0,255,0);
+	Canvas.Font = class'ROHUD'.Static.GetLargeMenuFont(Canvas);
+	Canvas.DrawTextJustified(Time, 0, Xbox + 30, Yposition, BoxEnd - Canvas.SizeX * 0.05, Yposition + 35);
+	Canvas.Font = class'ROHUD'.Static.GetSmallerMenuFont(Canvas);
+	Canvas.SetDrawColor(0,255,0);
+	Yposition += 50;
+	Canvas.DrawTextJustified("WR: " @ FormatTime(WRTOT), 1, Xbox, Yposition, BoxEnd, Yposition + 25);
+	Canvas.SetDrawColor(255,0,255);
+	Yposition += 30;
+	Canvas.DrawTextJustified("PB: " @ FormatTime(PB), 1, Xbox, Yposition, BoxEnd, Yposition + 25);
+	Yposition += 30;
+	Canvas.DrawTextJustified("SOB:" @ FormatTime(SoB), 1, Xbox, Yposition, BoxEnd, Yposition + 25);
 
-		
-	Canvas.SetPos(canvasDim, Yposition);
-	
-	if (wave != FinalWave + 1)
-		Canvas.DrawText(Time);
-	
+	// Reset the canvas to prevent strange colors in other places
+	Canvas.Reset();
 }
+
+
+event NotifyLevelChange() {
+    Master.RemoveInteraction(self);
+}
+
 
 function String FormatTime( int Seconds )
 {
@@ -131,12 +201,12 @@ function String FormatTime( int Seconds )
 
     return Time;
 }
- 
- 
+
+
 function String FormatDifference ( int Seconds )
 {
 	local String difference;
-	
+
 	if ( Seconds > 0 )
 	{
 		difference = "+";
@@ -148,14 +218,14 @@ function String FormatDifference ( int Seconds )
 		difference = "-" $ difference;
 	}
 	return difference;
-}		
-		
-		
+}
+
+
 function int SegmentTime ( int Elapsed, int Wave)
 {
 	local int i;
 	local int time;
-	
+
 	time = Elapsed;
 	for ( i = 0; i < Wave; i++ )
 		time -= Seconds[i];
@@ -168,4 +238,3 @@ defaultproperties
     bVisible=true
     bActive=true
 }
-
