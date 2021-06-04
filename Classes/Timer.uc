@@ -178,7 +178,6 @@ function bool KeyEvent(EInputKey Key, EInputAction Action, float Delta)
 			panel= MidGamePanel(KFInvasionLoginMenu(KFGUIController(ViewportOwner.GUIController).ActivePage).c_Main.AddTabItem(newTab));
 			if (panel != none) {
 				panel.ModifiedChatRestriction= KFInvasionLoginMenu(KFGUIController(ViewportOwner.GUIController).ActivePage).UpdateChatRestriction;
-				//newTab.TimerInteraction = this;
 			}
 		}
 	}
@@ -249,5 +248,5 @@ defaultproperties
 {
 	bVisible=true
 	bActive=true
-	newTab=(ClassName="SplitTimer.TimerPanel")
+	newTab=(ClassName="SplitTimer.TimerPanel",Caption="Split Timer",Hint="Set the time for your splits")
 }
