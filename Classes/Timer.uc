@@ -19,31 +19,19 @@ event Initialized()
 {
 	local int i;
 
-		//Log("Interaction Started");
-		// Waves go from 0 to 4
-		currentWave = 0;
-
-		for ( i = 0; i < 12; i++)
-		{
-			RealBest[i] = Best[i];
-		}
+	//Log("Interaction Started");
+	// Waves go from 0 to 4
+	currentWave = 0;
 
 	//Sums the wr splits to show the current WR (MASTRO)
-	for (i=0 ; i<12; i++)
-	{
-		WRTOT += WR[i];
-	}
 	//Sums the best splits to show your best possible time (Sum of Best) (MASTRO)
-	for (i=0; i<12; i++)
+	for ( i = 0; i < 12; i++)
 	{
+		RealBest[i] = Best[i];
+		WRTOT += WR[i];
 		SoB += Best[i];
-	}
-	
-	for (i=0; i<12; i++)
-	{
 		Segments[i] = "Wave" @ i + 1 @ FormatTime(WR[i]);
 	}
-
 }
 
 function PostRender( canvas Canvas )
