@@ -65,10 +65,10 @@ function InternalOnLoadINI(GUIComponent sender, string s) {
 
 	for (i = 0; i < 12; i++)
 	{
-		WRBoxes[i].NumericBox.SetValue(TimerInteraction.Best[i]);
+		WRBoxes[i].NumericBox.SetValue(TimerInteraction.WR[i]);
 		BestBoxes[i].NumericBox.SetValue(TimerInteraction.Best[i]);
 	}
-	//PB.SetValue(TimerInteraction.PB);
+	PB.SetValue(TimerInteraction.PB);
 }
 
 function InternalOnChange(GUIComponent sender) {
@@ -76,10 +76,10 @@ function InternalOnChange(GUIComponent sender) {
 
 	for (i = 0; i < 12; i++)
 	{
-		TimerInteraction.Best[i] = Int(WRBoxes[i].NumericBox.GetComponentValue());
+		TimerInteraction.WR[i] = Int(WRBoxes[i].NumericBox.GetComponentValue());
 		TimerInteraction.Best[i] = Int(BestBoxes[i].NumericBox.GetComponentValue());
 	}
-	//TimerInteraction.PB = Int(PB.GetComponentValue());
+	TimerInteraction.PB = Int(PB.GetComponentValue());
 	TimerInteraction.SaveConfig();
 }
 
@@ -135,6 +135,8 @@ defaultproperties {
 		MinValue=0
 		Caption="Wave 2"
 		IniOption="@Internal"
+		OnChange=TimerPanel.InternalOnChange
+        OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
 	WR1=moNumericEdit'TimerPanel.WRBox_1'
 	
