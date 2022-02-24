@@ -119,6 +119,7 @@ function PostRender( canvas Canvas )
 	Canvas.DrawTextJustified("SPLIT TIMER", 1, Xbox, Ybox, BoxEnd, Ybox + 25);
 	Canvas.SetPos(Xbox , Ybox);
 	Canvas.DrawBox(Canvas, Canvas.SizeX * 0.24, 450);
+	Canvas.DrawHorizontal(Ybox+20, Canvas.SizeX * 0.24);
 	
 	// Changes the 3 colors of the splits by comparing them to WR and to Best splits(MASTRO)
 	for ( i = 0; i < FinalWave + 1; i++ )
@@ -143,9 +144,12 @@ function PostRender( canvas Canvas )
 	Canvas.SetDrawColor(0,255,0);
 	Canvas.Font = class'ROHUD'.Static.GetLargeMenuFont(Canvas);
 	Canvas.DrawTextJustified(Time, 0, Xbox + 30, Yposition, BoxEnd - Canvas.SizeX * 0.05, Yposition + 35);
+	Canvas.SetDrawColor(0,0,255);
+	Canvas.SetPos(Xbox , Ybox);
+	Canvas.DrawHorizontal(Yposition + 35, Canvas.SizeX * 0.24);
 	Canvas.Font = class'ROHUD'.Static.GetSmallerMenuFont(Canvas);
 	Canvas.SetDrawColor(0,255,0);
-	Yposition += 50;
+	Yposition += 75;
 	Canvas.DrawTextJustified("WR: " @ FormatTime(WRTOT), 1, Xbox, Yposition, BoxEnd, Yposition + 25);
 	Canvas.SetDrawColor(255,0,255);
 	Yposition += 30;
