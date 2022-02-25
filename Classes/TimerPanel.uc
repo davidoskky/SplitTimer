@@ -51,7 +51,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner) {
 	
     sb_PB.ManageComponent(PB);
 
-	for (i = 0; i < 12; i++)
+	for (i = 0; i < 11; i++)
 	{
 		WRBoxes[i].str = 'Wave' @ i;
 		BestBoxes[i].str = 'Wave' @ i;
@@ -63,7 +63,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner) {
 function InternalOnLoadINI(GUIComponent sender, string s) {
     local int i;
 
-	for (i = 0; i < 12; i++)
+	for (i = 0; i < 11; i++)
 	{
 		WRBoxes[i].NumericBox.SetValue(TimerInteraction.WR[i]);
 		BestBoxes[i].NumericBox.SetValue(TimerInteraction.Best[i]);
@@ -74,7 +74,7 @@ function InternalOnLoadINI(GUIComponent sender, string s) {
 function InternalOnChange(GUIComponent sender) {
     local int i;
 
-	for (i = 0; i < 12; i++)
+	for (i = 0; i < 11; i++)
 	{
 		if (sender == WRBoxes[i].NumericBox)
 			TimerInteraction.WR[i] = Int(WRBoxes[i].NumericBox.GetComponentValue());

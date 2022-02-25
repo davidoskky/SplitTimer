@@ -26,7 +26,7 @@ event Initialized()
 
 	//Sums the wr splits to show the current WR (MASTRO)
 	//Sums the best splits to show your best possible time (Sum of Best) (MASTRO)
-	for ( i = 0; i < 12; i++)
+	for ( i = 0; i < 11; i++)
 	{
 		RealBest[i] = Best[i];
 		WRTOT += WR[i];
