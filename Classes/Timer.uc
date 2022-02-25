@@ -149,7 +149,13 @@ function PostRender( canvas Canvas )
 	Canvas.DrawHorizontal(Yposition + 35, Canvas.SizeX * 0.24);
 	Canvas.Font = class'ROHUD'.Static.GetSmallerMenuFont(Canvas);
 	Canvas.SetDrawColor(0,255,0);
-	Yposition += 75;
+	
+	// Adaptive position of the lowest stats
+	if (Canvas.SizeY < 1080) {
+		Yposition += 75;
+	} else {
+		Yposition += 50;
+	}
 	Canvas.DrawTextJustified("WR: " @ FormatTime(WRTOT), 1, Xbox, Yposition, BoxEnd, Yposition + 25);
 	Canvas.SetDrawColor(255,0,255);
 	Yposition += 30;
