@@ -1,42 +1,46 @@
 class SplitTimer extends Mutator;
  
  var bool bGameStarted;
+ var bool bInitiated;
  
 function PreBeginPlay()
 {
-	Disable('Tick');
+	Log("SplitTimer: Mutator started");
+	//Disable('Tick');
 	bGameStarted = False;
-}
-
-function MatchStarting()
-{
+	bInitiated = False;
+	
+	Log("SplitTimer: Match starting");
 	if (KFGameType(Level.Game) == none)
 	{
+	Log("SplitTimer: Destroying mutator");
 	Destroy();
 	return;
 	}
 		
 	if (Level.NetMode != NM_Standalone)
 	{
+		Log("SplitTimer: Add package to map");
 		AddToPackageMap("SplitTimer");
 	}
-
-	bGameStarted = True;
-	Enable('Tick');
 }
 
 simulated function Tick(float DeltaTime)
 {
 	local PlayerController PC;
+	local GameReplicationInfo GRI;
 
-	if (!bGameStarted)
+	GRI = Level.GRI;
+	if (!GRI.bMatchHasBegun)
+	{
 		return;
+	}
 	 
 	PC = Level.GetLocalPlayerController();
 	
 	if (PC != none) {
 		PC.Player.InteractionMaster.AddInteraction("SplitTimer.Timer", PC.Player); // Create the interaction
-    }
+	}
 
 	Disable('Tick');
 }

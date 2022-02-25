@@ -14,6 +14,7 @@ var int Seconds[11];
 var int WRTOT;
 var int SoB;
 
+var GUI.GUITabItem newTab;
 
 event Initialized()
 {
@@ -25,7 +26,7 @@ event Initialized()
 
 	//Sums the wr splits to show the current WR (MASTRO)
 	//Sums the best splits to show your best possible time (Sum of Best) (MASTRO)
-	for ( i = 0; i < 12; i++)
+	for ( i = 0; i < 11; i++)
 	{
 		RealBest[i] = Best[i];
 		WRTOT += WR[i];
@@ -118,6 +119,7 @@ function PostRender( canvas Canvas )
 	Canvas.DrawTextJustified("SPLIT TIMER", 1, Xbox, Ybox, BoxEnd, Ybox + 25);
 	Canvas.SetPos(Xbox , Ybox);
 	Canvas.DrawBox(Canvas, Canvas.SizeX * 0.24, 450);
+	Canvas.DrawHorizontal(Ybox+20, Canvas.SizeX * 0.24);
 	
 	// Changes the 3 colors of the splits by comparing them to WR and to Best splits(MASTRO)
 	for ( i = 0; i < FinalWave + 1; i++ )
@@ -142,9 +144,18 @@ function PostRender( canvas Canvas )
 	Canvas.SetDrawColor(0,255,0);
 	Canvas.Font = class'ROHUD'.Static.GetLargeMenuFont(Canvas);
 	Canvas.DrawTextJustified(Time, 0, Xbox + 30, Yposition, BoxEnd - Canvas.SizeX * 0.05, Yposition + 35);
+	Canvas.SetDrawColor(0,0,255);
+	Canvas.SetPos(Xbox , Ybox);
+	Canvas.DrawHorizontal(Yposition + 35, Canvas.SizeX * 0.24);
 	Canvas.Font = class'ROHUD'.Static.GetSmallerMenuFont(Canvas);
 	Canvas.SetDrawColor(0,255,0);
-	Yposition += 50;
+	
+	// Adaptive position of the lowest stats
+	if (Canvas.SizeY < 1080) {
+		Yposition += 75;
+	} else {
+		Yposition += 50;
+	}
 	Canvas.DrawTextJustified("WR: " @ FormatTime(WRTOT), 1, Xbox, Yposition, BoxEnd, Yposition + 25);
 	Canvas.SetDrawColor(255,0,255);
 	Yposition += 30;
@@ -162,32 +173,54 @@ event NotifyLevelChange() {
 }
 
 
+function bool KeyEvent(EInputKey Key, EInputAction Action, float Delta)
+{
+	local string alias;
+	local MidGamePanel panel;
+
+	alias= ViewportOwner.Actor.ConsoleCommand("KEYBINDING"@ViewportOwner.Actor.ConsoleCommand("KEYNAME"@Key));
+	if (Action == IST_Press && alias ~= "showmenu") {
+		if (KFGUIController(ViewportOwner.GUIController).ActivePage == None) {
+			ViewportOwner.Actor.ShowMenu();
+		}
+		if (KFInvasionLoginMenu(KFGUIController(ViewportOwner.GUIController).ActivePage) != none &&
+				KFInvasionLoginMenu(KFGUIController(ViewportOwner.GUIController).ActivePage).c_Main.TabIndex(newTab.caption) == -1) {
+			panel= MidGamePanel(KFInvasionLoginMenu(KFGUIController(ViewportOwner.GUIController).ActivePage).c_Main.AddTabItem(newTab));
+			if (panel != none) {
+				panel.ModifiedChatRestriction= KFInvasionLoginMenu(KFGUIController(ViewportOwner.GUIController).ActivePage).UpdateChatRestriction;
+			}
+		}
+	}
+	return false;
+}
+
+
 function String FormatTime( int Seconds )
 {
-    local int Minutes, Hours;
-    local String Time;
+	local int Minutes, Hours;
+	local String Time;
 
-    if( Seconds > 3600 )
-    {
-        Hours = Seconds / 3600;
-        Seconds -= Hours * 3600;
+	if( Seconds > 3600 )
+	{
+		Hours = Seconds / 3600;
+		Seconds -= Hours * 3600;
 
-        Time = Hours$":";
+		Time = Hours$":";
 	}
 	Minutes = Seconds / 60;
-    Seconds -= Minutes * 60;
+	Seconds -= Minutes * 60;
 
-    if( Minutes >= 10 )
-        Time = Time $ Minutes $ ":";
-    else
-        Time = Time $ "0" $ Minutes $ ":";
+	if( Minutes >= 10 )
+		Time = Time $ Minutes $ ":";
+	else
+		Time = Time $ "0" $ Minutes $ ":";
 
-    if( Seconds >= 10 )
-        Time = Time $ Seconds;
-    else
-        Time = Time $ "0" $ Seconds;
+	if( Seconds >= 10 )
+		Time = Time $ Seconds;
+	else
+		Time = Time $ "0" $ Seconds;
 
-    return Time;
+	return Time;
 }
 
 
@@ -223,6 +256,7 @@ function int SegmentTime ( int Elapsed, int Wave)
 
 defaultproperties
 {
-    bVisible=true
-    bActive=true
+	bVisible=true
+	bActive=true
+	newTab=(ClassName="SplitTimer.TimerPanel",Caption="Split Timer",Hint="Set the time for your splits")
 }
