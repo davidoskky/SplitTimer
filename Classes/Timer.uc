@@ -1,6 +1,7 @@
 Class Timer extends Interaction config(SplitTimer);
 
 var int currentWave;
+var int TotalTime;
 var float Yposition;
 
 var config bool bUpdateConfig;
@@ -44,7 +45,6 @@ function PostRender( canvas Canvas )
     local int elapsed;
     local int difference;
     local int FinalWave;
-    local int TotalTime;
     local int i;
     //(MASTRO)
     local int Xbox;
@@ -59,25 +59,34 @@ function PostRender( canvas Canvas )
     wave = KFGameReplicationInfo(GRI).WaveNumber;
 
     elapsed = GRI.ElapsedTime;
-    Time = FormatTime(elapsed);
+    if (TotalTime == 0)
+        Time = FormatTime(elapsed);
+    else
+        Time = FormatTime(TotalTime);
 
     // Check if we beat the Patriarch
-    if (KFGameReplicationInfo(GRI).EndGameType  == 2)
+    if (KFGameReplicationInfo(GRI).EndGameType == 2 && TotalTime == 0)
     {
-        //If we beat the WR, update the ini file
+        TotalTime = elapsed;
+        Seconds[wave] = SegmentTime(elapsed, wave);
+        difference = Seconds[wave] - WR[wave];
+        Segments[wave] = Segments[wave] @ FormatDifference(difference);
+
+        // Update the config for the Patriarch wave
         if (bUpdateConfig)
         {
-            for ( i = 0; i < wave; i++ )
-            {
-                TotalTime += Seconds[i];
-            }
+            //If we beat the WR, update the ini file
             if (TotalTime < WRTOT)
             {
-                for ( i = 0; i < wave-1; i++)
+                for ( i = 0; i < wave+1; i++)
                 {
                     WR[i] = Seconds[i];
                 }
-                WR[wave] = elapsed;
+                SaveConfig();
+            }
+            if (SegmentTime(TotalTime, wave) - RealBest[wave] < 0)
+            {
+                Best[wave] = Seconds[wave];
                 SaveConfig();
             }
             if (TotalTime < PB)
@@ -91,14 +100,14 @@ function PostRender( canvas Canvas )
     Seconds[wave] = SegmentTime(elapsed, wave);
 
     // At wave change, check difference with WR
-    if ( wave != currentWave )
+    if (wave != currentWave && TotalTime == 0)
     {
-        difference = Seconds [currentWave] - WR[currentWave];
+        difference = Seconds[currentWave] - WR[currentWave];
 
         Segments[currentWave] = Segments[currentWave] @ FormatDifference(difference);
 
         // Save new BEST in the ini file //The thing between parenthesis is complicated cause the variable it used has been modified above (MASTRO)
-        if (bUpdateConfig && ((SegmentTime(elapsed, currentWave) - RealBest[currentWave])  < 0))
+        if (bUpdateConfig && ((SegmentTime(elapsed, currentWave) - RealBest[currentWave]) < 0))
         {
             Best[currentWave] = Seconds[currentWave];
             SaveConfig();
@@ -115,7 +124,7 @@ function PostRender( canvas Canvas )
     Ybox = Yposition - Canvas.SizeY * 0.05;
     Xbox = Canvas.SizeX * 0.75;
     BoxEnd = Xbox + Canvas.SizeX * 0.24;
-     Canvas.SetDrawColor(0,0,255);
+    Canvas.SetDrawColor(0,0,255);
     Canvas.DrawTextJustified("SPLIT TIMER", 1, Xbox, Ybox, BoxEnd, Ybox + 25);
     Canvas.SetPos(Xbox , Ybox);
     Canvas.DrawBox(Canvas, Canvas.SizeX * 0.24, 450);
@@ -127,9 +136,9 @@ function PostRender( canvas Canvas )
         if (Seconds[i] <= RealBest[i])
             Canvas.SetDrawColor(255,0,255);
         else if (Seconds[i] <= WR[i])
-                Canvas.SetDrawColor(0,255,0);
-             else
-                Canvas.SetDrawColor(255,0,0);
+            Canvas.SetDrawColor(0,255,0);
+        else
+            Canvas.SetDrawColor(255,0,0);
 
         //Set the color of the next waves to white
         if (wave < i)
