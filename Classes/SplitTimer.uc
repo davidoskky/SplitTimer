@@ -1,56 +1,31 @@
 class SplitTimer extends Mutator;
- 
- var bool bGameStarted;
- var bool bInitiated;
- 
-function PreBeginPlay()
-{
-	Log("SplitTimer: Mutator started");
-	//Disable('Tick');
-	bGameStarted = False;
-	bInitiated = False;
-	
-	Log("SplitTimer: Match starting");
-	if (KFGameType(Level.Game) == none)
-	{
-	Log("SplitTimer: Destroying mutator");
-	Destroy();
-	return;
-	}
-		
-	if (Level.NetMode != NM_Standalone)
-	{
-		Log("SplitTimer: Add package to map");
-		AddToPackageMap("SplitTimer");
-	}
-}
 
 simulated function Tick(float DeltaTime)
 {
-	local PlayerController PC;
-	local GameReplicationInfo GRI;
+    local PlayerController PC;
 
-	GRI = Level.GRI;
-	if (!GRI.bMatchHasBegun)
-	{
-		return;
-	}
-	 
-	PC = Level.GetLocalPlayerController();
-	
-	if (PC != none) {
-		PC.Player.InteractionMaster.AddInteraction("SplitTimer.Timer", PC.Player); // Create the interaction
-	}
+    PC = Level.GetLocalPlayerController();
 
-	Disable('Tick');
+    if (PC != none)
+    {
+        // Create the interaction
+        PC.Player.InteractionMaster.AddInteraction(string(class'Timer'), PC.Player);
+        // disable me when interaction is created
+        Disable('Tick');
+    }
+
+    // disable tick for servers
+    if (Role == Role_Authority)
+        Disable('Tick');
 }
- 
-defaultproperties 
+
+defaultproperties
 {
-	 GroupName="KFSplitTimer"
-     FriendlyName="Split Timer"
-     Description="Split timer for performing speedruns"
-     
-     RemoteRole=ROLE_SimulatedProxy
-     bAlwaysRelevant=true
+    GroupName="KFSplitTimer"
+    FriendlyName="Split Timer"
+    Description="Split timer for performing speedruns"
+
+    RemoteRole=ROLE_SimulatedProxy
+    bAlwaysRelevant=true
+    bAddToServerPackages=true
 }
