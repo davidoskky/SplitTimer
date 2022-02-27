@@ -125,7 +125,7 @@ defaultproperties {
 		OnChange=TimerPanel.InternalOnChange
         OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	PB = moNumericEdit'TimerPanel.PBBox'
+	PB=PBBox
 	
 	Begin Object Class=moNumericEdit Name=WRBox_0
 		MinValue=0
@@ -134,7 +134,7 @@ defaultproperties {
 		OnChange=TimerPanel.InternalOnChange
         OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	WR0=moNumericEdit'TimerPanel.WRBox_0'
+	WR0=WRBox_0
 	
 	Begin Object Class=moNumericEdit Name=WRBox_1
 		MinValue=0
@@ -143,7 +143,7 @@ defaultproperties {
 		OnChange=TimerPanel.InternalOnChange
         OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	WR1=moNumericEdit'TimerPanel.WRBox_1'
+	WR1=WRBox_1
 	
 	Begin Object Class=moNumericEdit Name=WRBox_2
 		MinValue=0
@@ -152,7 +152,7 @@ defaultproperties {
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 		OnChange=TimerPanel.InternalOnChange
 	End Object
-	WR2=moNumericEdit'TimerPanel.WRBox_2'
+	WR2=WRBox_2
 	
 	Begin Object Class=moNumericEdit Name=WRBox_3
 		MinValue=0
@@ -161,16 +161,16 @@ defaultproperties {
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 		OnChange=TimerPanel.InternalOnChange
 	End Object
-	WR3=moNumericEdit'TimerPanel.WRBox_3'
+	WR3=WRBox_3
 	
-		Begin Object Class=moNumericEdit Name=WRBox_4
+	Begin Object Class=moNumericEdit Name=WRBox_4
 		MinValue=0
 		Caption="Wave 5"
 		IniOption="@Internal"
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 		OnChange=TimerPanel.InternalOnChange
 	End Object
-	WR4=moNumericEdit'TimerPanel.WRBox_4'
+	WR4=WRBox_4
 	
 	Begin Object Class=moNumericEdit Name=WRBox_5
 		MinValue=0
@@ -179,7 +179,7 @@ defaultproperties {
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 		OnChange=TimerPanel.InternalOnChange
 	End Object
-	WR5=moNumericEdit'TimerPanel.WRBox_5'
+	WR5=WRBox_5
 	
 	Begin Object Class=moNumericEdit Name=WRBox_6
 		MinValue=0
@@ -188,7 +188,7 @@ defaultproperties {
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 		OnChange=TimerPanel.InternalOnChange
 	End Object
-	WR6=moNumericEdit'TimerPanel.WRBox_6'
+	WR6=WRBox_6
 	
 	Begin Object Class=moNumericEdit Name=WRBox_7
 		MinValue=0
@@ -197,7 +197,7 @@ defaultproperties {
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 		OnChange=TimerPanel.InternalOnChange
 	End Object
-	WR7=moNumericEdit'TimerPanel.WRBox_7'
+	WR7=WRBox_7
 	
 	Begin Object Class=moNumericEdit Name=WRBox_8
 		MinValue=0
@@ -206,7 +206,7 @@ defaultproperties {
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 		OnChange=TimerPanel.InternalOnChange
 	End Object
-	WR8=moNumericEdit'TimerPanel.WRBox_8'
+	WR8=WRBox_8
 	
 	Begin Object Class=moNumericEdit Name=WRBox_9
 		MinValue=0
@@ -215,7 +215,7 @@ defaultproperties {
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 		OnChange=TimerPanel.InternalOnChange
 	End Object
-	WR9 = moNumericEdit'TimerPanel.WRBox_9'
+	WR9=WRBox_9
 	
 	Begin Object Class=moNumericEdit Name=WRBox_10
 		MinValue=0
@@ -224,7 +224,7 @@ defaultproperties {
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 		OnChange=TimerPanel.InternalOnChange
 	End Object
-	WR10 = moNumericEdit'TimerPanel.WRBox_10'
+	WR10=WRBox_10
 	
 	Begin Object Class=moNumericEdit Name=BestBox_0
 		MinValue=0
@@ -233,7 +233,7 @@ defaultproperties {
 		OnChange=TimerPanel.InternalOnChange
         OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	Best0=moNumericEdit'TimerPanel.BestBox_0'
+	Best0=BestBox_0
 	
 	Begin Object Class=moNumericEdit Name=BestBox_1
 		MinValue=0
@@ -242,7 +242,7 @@ defaultproperties {
 		OnChange=TimerPanel.InternalOnChange
         OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	Best1=moNumericEdit'TimerPanel.BestBox_1'
+	Best1=BestBox_1
 	
 	Begin Object Class=moNumericEdit Name=BestBox_2
 		MinValue=0
@@ -251,7 +251,7 @@ defaultproperties {
 		OnChange=TimerPanel.InternalOnChange
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	Best2=moNumericEdit'TimerPanel.BestBox_2'
+	Best2=BestBox_2
 	
 	Begin Object Class=moNumericEdit Name=BestBox_3
 		MinValue=0
@@ -260,7 +260,7 @@ defaultproperties {
 		OnChange=TimerPanel.InternalOnChange
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	Best3=moNumericEdit'TimerPanel.BestBox_3'
+	Best3=BestBox_3
 	
 		Begin Object Class=moNumericEdit Name=BestBox_4
 		MinValue=0
@@ -269,7 +269,7 @@ defaultproperties {
 		OnChange=TimerPanel.InternalOnChange
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	Best4=moNumericEdit'TimerPanel.BestBox_4'
+	Best4=BestBox_4
 	
 	Begin Object Class=moNumericEdit Name=BestBox_5
 		MinValue=0
@@ -278,7 +278,7 @@ defaultproperties {
 		OnChange=TimerPanel.InternalOnChange
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	Best5=moNumericEdit'TimerPanel.BestBox_5'
+	Best5=BestBox_5
 	
 	Begin Object Class=moNumericEdit Name=BestBox_6
 		MinValue=0
@@ -287,7 +287,7 @@ defaultproperties {
 		OnChange=TimerPanel.InternalOnChange
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	Best6=moNumericEdit'TimerPanel.BestBox_6'
+	Best6=BestBox_6
 	
 	Begin Object Class=moNumericEdit Name=BestBox_7
 		MinValue=0
@@ -296,7 +296,7 @@ defaultproperties {
 		OnChange=TimerPanel.InternalOnChange
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	Best7=moNumericEdit'TimerPanel.BestBox_7'
+	Best7=BestBox_7
 	
 	Begin Object Class=moNumericEdit Name=BestBox_8
 		MinValue=0
@@ -305,7 +305,7 @@ defaultproperties {
 		OnChange=TimerPanel.InternalOnChange
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	Best8=moNumericEdit'TimerPanel.BestBox_8'
+	Best8=BestBox_8
 	
 	Begin Object Class=moNumericEdit Name=BestBox_9
 		MinValue=0
@@ -314,7 +314,7 @@ defaultproperties {
 		OnChange=TimerPanel.InternalOnChange
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	Best9 = moNumericEdit'TimerPanel.BestBox_9'
+	Best9=BestBox_9
 	
 	Begin Object Class=moNumericEdit Name=BestBox_10
 		MinValue=0
@@ -323,5 +323,5 @@ defaultproperties {
 		OnChange=TimerPanel.InternalOnChange
 		OnLoadINI=TimerPanel.InternalOnLoadINI
 	End Object
-	Best10 = moNumericEdit'TimerPanel.BestBox_10'
+	Best10=BestBox_10
 }
