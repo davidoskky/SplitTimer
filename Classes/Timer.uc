@@ -87,7 +87,7 @@ function PostRender( canvas Canvas )
             }
         }
     }
-    
+
     Seconds[wave] = SegmentTime(elapsed, wave);
 
     // At wave change, check difference with WR
@@ -120,7 +120,7 @@ function PostRender( canvas Canvas )
     Canvas.SetPos(Xbox , Ybox);
     Canvas.DrawBox(Canvas, Canvas.SizeX * 0.24, 450);
     Canvas.DrawHorizontal(Ybox+20, Canvas.SizeX * 0.24);
-    
+
     // Changes the 3 colors of the splits by comparing them to WR and to Best splits(MASTRO)
     for ( i = 0; i < FinalWave + 1; i++ )
     {
@@ -149,7 +149,7 @@ function PostRender( canvas Canvas )
     Canvas.DrawHorizontal(Yposition + 35, Canvas.SizeX * 0.24);
     Canvas.Font = class'ROHUD'.Static.GetSmallerMenuFont(Canvas);
     Canvas.SetDrawColor(0,255,0);
-    
+
     // Adaptive position of the lowest stats
     if (Canvas.SizeY < 1080) {
         Yposition += 75;
