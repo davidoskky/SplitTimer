@@ -8,7 +8,8 @@ simulated function Tick(float DeltaTime)
 
     if (PC != none)
     {
-        PC.Player.InteractionMaster.AddInteraction(string(class'Timer'), PC.Player); // Create the interaction
+        // Create the interaction
+        PC.Player.InteractionMaster.AddInteraction(string(class'Timer'), PC.Player);
         // disable me when interaction is created
         Disable('Tick');
     }
@@ -20,11 +21,11 @@ simulated function Tick(float DeltaTime)
 
 defaultproperties
 {
-     GroupName="KFSplitTimer"
-     FriendlyName="Split Timer"
-     Description="Split timer for performing speedruns"
+    GroupName="KFSplitTimer"
+    FriendlyName="Split Timer"
+    Description="Split timer for performing speedruns"
 
-     RemoteRole=ROLE_SimulatedProxy
-     bAlwaysRelevant=true
-     bAddToServerPackages=true
+    RemoteRole=ROLE_SimulatedProxy
+    bAlwaysRelevant=true
+    bAddToServerPackages=true
 }
